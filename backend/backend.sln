@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Common", "TicTacToe.Common\TicTacToe.Common.csproj", "{22978045-2544-40F0-B52B-B87E67812D44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{69C46EA4-67D3-42F6-88F0-3341554C449D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3534F02A-3AD9-431E-9DF3-D6C55D4FF971}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTatToe.Data", "TicTatToe.Data\TicTatToe.Data.csproj", "{C1440D66-58AB-402E-A18F-ED58AF4C411B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22978045-2544-40F0-B52B-B87E67812D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22978045-2544-40F0-B52B-B87E67812D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22978045-2544-40F0-B52B-B87E67812D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22978045-2544-40F0-B52B-B87E67812D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69C46EA4-67D3-42F6-88F0-3341554C449D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69C46EA4-67D3-42F6-88F0-3341554C449D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69C46EA4-67D3-42F6-88F0-3341554C449D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69C46EA4-67D3-42F6-88F0-3341554C449D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1440D66-58AB-402E-A18F-ED58AF4C411B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1440D66-58AB-402E-A18F-ED58AF4C411B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1440D66-58AB-402E-A18F-ED58AF4C411B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1440D66-58AB-402E-A18F-ED58AF4C411B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
