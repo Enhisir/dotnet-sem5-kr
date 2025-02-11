@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../../components/button/button.tsx';
 import Input from '../../components/input/input.tsx';
 import classes from './registrationPage.module.css';
-import {useNavigate} from "react-router-dom";
+import {Navigate, useNavigate} from 'react-router-dom';
+import api from '../../client/axiosInstance.ts';
+import {useProfile} from "../../contexts/ProfileContext.tsx";
 
 interface FormState {
   username: string;
@@ -16,19 +18,38 @@ const RegistrationPage = () => {
     password: '',
     confirmPassword: '',
   });
-
-  const navigator = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [profile, loading] = useProfile();
+  if (profile != null) return <Navigate to="/games"></Navigate>;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
+      setError('Пароли не совпадают');
       return;
     }
-    console.log('Регистрация:', form);
+
+    const payload = {
+      username: form.username,
+      password: form.password,
+    };
+
+    api.post('/auth/sign_up', payload)
+      .then(() => navigate('/login'))
+      .catch((err) => {
+        if (err.response && err.response.data) {
+          setError(err.response.data.message || 'Ошибка регистрации');
+        } else {
+          setError('Ошибка регистрации');
+        }
+      });
   };
 
   return (
@@ -58,11 +79,13 @@ const RegistrationPage = () => {
             value={form.confirmPassword}
             onChange={handleChange}
           />
+          {error && <div className={classes.error}>{error}</div>}
           <Button type="submit">Регистрация</Button>
         </form>
+
       </div>
       <div className={classes.container}>
-        <Button onClick={() => navigator("/login")}>Вход</Button>
+        <Button onClick={() => navigate('/login')}>Вход</Button>
       </div>
     </>
   );

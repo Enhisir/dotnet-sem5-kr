@@ -4,7 +4,7 @@ import styles from '../gameListPage.module.css';
 interface RatingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  nickname?: string;
+  username?: string;
   rating?: number;
 }
 
@@ -12,7 +12,7 @@ const RatingModal: React.FC<RatingModalProps> = (
   {
     isOpen,
     onClose,
-    nickname,
+    username,
     rating
   }) => {
   if (!isOpen) return null;
@@ -24,7 +24,7 @@ const RatingModal: React.FC<RatingModalProps> = (
           &times;
         </button>
         <div className={styles.modalTitle}>Ваша информация</div>
-        <div className={styles.modalText}>Ник: {nickname}</div>
+        <div className={styles.modalText}>Ник: {username}</div>
         <div className={styles.modalText}>Рейтинг: {rating}</div>
       </div>
     </div>
