@@ -4,6 +4,7 @@ using TicTacToe.Requests;
 using TicTacToe.Services.Abstractions;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories;
+using TicTatToe.Data.Repositories.Abstractions;
 
 namespace TicTacToe.Handlers;
 

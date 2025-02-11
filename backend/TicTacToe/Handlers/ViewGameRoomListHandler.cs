@@ -4,6 +4,7 @@ using TicTacToe.Requests;
 using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories;
+using TicTatToe.Data.Repositories.Abstractions;
 
 namespace TicTacToe.Handlers;
 

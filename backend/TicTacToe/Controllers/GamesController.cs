@@ -22,4 +22,8 @@ public class GamesController(IMediator mediator) : ControllerBase
     [HttpPost("enter")]
     public async Task<IResult> EnterGameRoom(EnterGameRoomDto gameDto)
         => await mediator.Send(new EnterGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
+    
+    [HttpPost("leave")]
+    public async Task<IResult> LeaveGameRoom(LeaveGameDto gameDto)
+        => await mediator.Send(new LeaveGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
 }

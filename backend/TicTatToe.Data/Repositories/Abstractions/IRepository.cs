@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace TicTatToe.Data.Repositories;
+namespace TicTatToe.Data.Repositories.Abstractions;
 
 public interface IRepository<TEntity>
 {

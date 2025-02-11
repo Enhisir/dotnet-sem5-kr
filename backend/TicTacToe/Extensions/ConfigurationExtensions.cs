@@ -58,6 +58,7 @@ public static class ConfigurationExtensions
             .AddScoped<IHandler<GetRatingRequest, IResult>, GetRatingHandler>()
             .AddScoped<IHandler<CreateGameRequest, IResult>, CreateGameHandler>()
             .AddScoped<IHandler<ViewGameRoomListRequest, IResult>, ViewGameRoomListHandler>()
-            .AddScoped<IHandler<EnterGameRoomRequest, IResult>, EnterGameRoomHandler>();
+            .AddScoped<IHandler<EnterGameRoomRequest, IResult>, EnterGameRoomHandler>()
+            .AddScoped<IHandler<LeaveGameRoomRequest, IResult>, LeaveGameRoomHandler>();
     }
 }

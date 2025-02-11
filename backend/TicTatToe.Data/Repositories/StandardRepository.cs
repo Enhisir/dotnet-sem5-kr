@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using TicTatToe.Data.Repositories.Abstractions;
 using TicTatToe.Data.Storage;
 
 namespace TicTatToe.Data.Repositories;
