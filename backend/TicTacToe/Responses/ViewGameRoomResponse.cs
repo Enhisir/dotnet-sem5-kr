@@ -2,7 +2,7 @@ using TicTatToe.Data.Enum;
 
 namespace TicTacToe.Responses;
 
-public class ViewGameRoomResponse(
+public record ViewGameRoomResponse(
     Guid Id, 
     DateTime CreatedAt,
     State State,

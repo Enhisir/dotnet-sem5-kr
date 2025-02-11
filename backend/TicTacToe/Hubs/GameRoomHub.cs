@@ -1,7 +1,11 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using TicTacToe.Common.CQRS;
+using TicTacToe.Messages;
 using TicTacToe.Requests;
+using TicTacToe.Responses;
 using TicTacToe.Services.Abstractions;
 using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
@@ -13,7 +17,9 @@ namespace TicTacToe.Hubs;
 public class GameRoomHub(
     ILogger<GameRoomHub> logger,
     IMediator mediator,
-    IRepository<GameRoomPublic> gameRoomPublicRepository)
+    IRepository<GameRoom> gameRoomRepository,
+    IRepository<GameRoomPublic> gameRoomPublicRepository,
+    IPublishEndpoint publishEndpoint)
     : Hub<IGameRoomClient>
 {
     public override async Task OnConnectedAsync()
@@ -47,8 +53,24 @@ public class GameRoomHub(
             Status = playerStatus
         };
         
-        // Сообщить всем что вошел игрок такой-то
-        // Через рэббит
+        var gameRoom =
+            await gameRoomRepository
+                .GetRange()
+                .Where(gr => gr.Id.Equals(gameRoomId))
+                .Include(gr => gr.Players)
+                .SingleOrDefaultAsync();
+        await publishEndpoint.Publish(
+            new PlayerJoinedMessage
+            {
+                Value = new GameRoomResponse
+                {
+                    Id = gameRoom!.Id,
+                    CurrentTurn = gameRoom.CurrentTurn,
+                    MaxRating = gameRoom.MaxRating,
+                    State = gameRoom.State,
+                    Users = gameRoom.Players!.Select(p => p.UserName).ToList(),
+                }
+            });
         
         await base.OnConnectedAsync();
     }
