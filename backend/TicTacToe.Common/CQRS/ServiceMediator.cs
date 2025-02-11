@@ -30,7 +30,7 @@ public class ServiceMediator(IServiceProvider serviceProvider) : IMediator
                     continue;
                 var func = Expression.Lambda<HandlerDelegate<TResponse>>(Expression.Call(
                     Expression.Constant(handler),
-                    handler.GetType().GetMethod("Handle", new[] { requestImpl, typeof(CancellationToken) })!,
+                    handler.GetType().GetMethod("Execute", [requestImpl, typeof(CancellationToken)])!,
                     Expression.Constant(request), Expression.Constant(cancellationToken))).Compile();
 
                 var pipeline = func;
@@ -44,7 +44,7 @@ public class ServiceMediator(IServiceProvider serviceProvider) : IMediator
                             continue;
                         pipeline = Expression.Lambda<HandlerDelegate<TResponse>>(Expression.Call(
                             Expression.Constant(pipe),
-                            pipe.GetType().GetMethod("Handle",
+                            pipe.GetType().GetMethod("Execute",
                                 new[]
                                 {
                                     requestImpl, typeof(HandlerDelegate<TResponse>), typeof(CancellationToken)
@@ -76,6 +76,6 @@ public class ServiceMediator(IServiceProvider serviceProvider) : IMediator
     {
         await using var scope = ServiceProvider.CreateAsyncScope();
         var handler = scope.ServiceProvider.GetService(typeof(IHandler<,>).MakeGenericType(request.GetType()));
-        return handler == null ? null : await handler.Handle(request, cancellationToken);
+        return handler == null ? null : await handler.Execute(request, cancellationToken);
     }
 }

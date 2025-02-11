@@ -18,11 +18,9 @@ public class SignInHandler(
         SignInRequest request, 
         CancellationToken cancellationToken)
     {
+        request.UserName = request.UserName.ToLower();
         var user = await userRepository
-            .GetSingleOrDefault(
-                u => u.UserName.Equals(
-                    request.UserName, 
-                    StringComparison.OrdinalIgnoreCase));
+            .GetSingleOrDefault(u => u.UserName.Equals(request.UserName));
         if (user is null
             || !passwordHasherService
                 .Validate(user.PasswordHashed, request.Password))

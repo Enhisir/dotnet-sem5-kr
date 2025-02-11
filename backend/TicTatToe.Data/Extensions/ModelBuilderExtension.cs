@@ -35,7 +35,7 @@ public static class ModelBuilderExtension
 
     public static void PrepareData(this ModelBuilder modelBuilder)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
         // var topics = new List<Topic>
         // {
         //     new() { Id = 1, Name = "Разработка" },

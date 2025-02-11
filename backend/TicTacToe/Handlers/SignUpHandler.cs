@@ -18,11 +18,9 @@ public class SignUpHandler(
         SignUpRequest request, 
         CancellationToken cancellationToken)
     {
+        request.UserName = request.UserName.ToLower();
         var maybeUser = await userRepository
-            .GetSingleOrDefault(
-                u => u.UserName.Equals(
-                    request.UserName, 
-                    StringComparison.OrdinalIgnoreCase));
+            .GetSingleOrDefault(u => u.UserName.Equals(request.UserName));
         if (maybeUser is not null)
             return Results.BadRequest("Username already exists");
 

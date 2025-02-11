@@ -10,6 +10,7 @@ builder.Services
     .AddSwaggerGen()
     .AddEndpointsApiExplorer();
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services
     .AddJwtConfigured()
     .AddDbContextConfigured()
@@ -25,6 +26,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.MapControllers();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -33,5 +36,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+app.UseCors(
+    opt => opt
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
 app.Run();
