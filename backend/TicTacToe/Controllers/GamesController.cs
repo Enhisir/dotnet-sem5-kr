@@ -7,7 +7,7 @@ using TicTacToe.Requests;
 namespace TicTacToe.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/v1/[controller]")]
 [Authorize]
 public class GamesController(IMediator mediator) : ControllerBase
 {
@@ -18,6 +18,8 @@ public class GamesController(IMediator mediator) : ControllerBase
     [HttpPost("create")]
     public async Task<IResult> CreateGame(CreateGameDto gameDto)
         => await mediator.Send(new CreateGameRequest(User.Identity!.Name!, gameDto.MaxRating));
+    
+    
     
     // [HttpPost("enter")]
     // public async Task<IResult> EnterGameRoom(EnterGameRoomDto gameDto)

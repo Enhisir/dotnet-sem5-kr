@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Common.CQRS;
 using TicTacToe.Helpers;
+using TicTacToe.Hubs;
 using TicTacToe.Requests;
 using TicTacToe.Responses;
 using TicTatToe.Data.Enum;
@@ -12,8 +14,8 @@ namespace TicTacToe.Handlers;
 
 public class PlayerMadeTurnHandler(
     IRepository<GameRoom> gameRoomRepository,
-    MongoStorage<Rating> ratingStorage
-    
+    MongoStorage<Rating> ratingStorage,
+    IHubContext<GameRoomHub> hubContext
 ) : IHandler<PlayerMadeTurnRequest, BaseResponse>
 {
     public async Task<BaseResponse> Execute(
@@ -58,16 +60,13 @@ public class PlayerMadeTurnHandler(
                 p => !p.UserName.Equals(gameRoom.CurrentTurn), 
                 nextPlayerRating);
             
-            // выкинуть чела при достижении лимита по рейтингу
+            // TODO: выкинуть чела при достижении лимита по рейтингу
+            // hubContext.Clients.Client().InvokeCoreAsync("Abort", [], cancellationToken);
         }
         else if (TicTacToeHelper.IsGameOver(battleState)) // все поля для победы заполнены
-        {
             await SetNewGameAsync(gameRoom);
-        }
-        else // продолжаем; выиграть может только тот, кто ходит
-        {
+        else
             await UpdateGameStateAsync(gameRoom, battleState);
-        }
 
         throw new NotImplementedException();
     }
@@ -78,7 +77,7 @@ public class PlayerMadeTurnHandler(
         gameRoom.CurrentTurn = gameRoom.Players![Random.Shared.Next(0, 2)].UserName;
         gameRoom.CurrentSign = Sign.X;
         await gameRoomRepository.UpdateAsync(gameRoom);
-        // разослать сообщение
+        // TODO: разослать сообщение
     }
     
     private async Task UpdateGameStateAsync(GameRoom gameRoom, int[][] battleState)
@@ -90,6 +89,6 @@ public class PlayerMadeTurnHandler(
                 .UserName;
         gameRoom.CurrentSign = gameRoom.CurrentSign == Sign.X ? Sign.O : Sign.X;
         await gameRoomRepository.UpdateAsync(gameRoom);
-        // разослать сообщение
+        // TODO: разослать сообщение
     }
 }

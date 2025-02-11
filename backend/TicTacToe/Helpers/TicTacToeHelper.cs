@@ -2,7 +2,7 @@ using TicTatToe.Data.Enum;
 
 namespace TicTacToe.Helpers;
 
-public class TicTacToeHelper
+public static class TicTacToeHelper
 {
     // Сжимает поле 3x3 в битовую маску (18 бит)
     public static int Compress(int[][] board)

@@ -79,7 +79,7 @@ public class GameRoomHub(
         }
     }
     
-    public async Task PlayerMadeTurn()
+    public async Task PlayerMadeTurn(int x, int y)
     {
         var items = new GameRoomHubContextItemsHelper(Context.Items);
         

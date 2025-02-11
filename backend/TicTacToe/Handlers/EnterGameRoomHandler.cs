@@ -33,9 +33,7 @@ public class EnterGameRoomHandler(
         var alreadyPlayersConnected =
             await gameRoomPublicRepository
                 .GetRange()
-                .Where(grp => grp.GameRoomId.Equals(gameRoom.Id) 
-                              // && grp.Status.Equals(PlayerStatus.Player)
-                              )
+                .Where(grp => grp.GameRoomId.Equals(gameRoom.Id))
                 .CountAsync(cancellationToken: cancellationToken);
         if (alreadyPlayersConnected == 2)
             return BaseResponse.Failure("Room is already full");
