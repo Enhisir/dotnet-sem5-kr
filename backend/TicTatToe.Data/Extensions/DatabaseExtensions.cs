@@ -19,7 +19,7 @@ public static class DatabaseExtensions
                 services
                     .BuildServiceProvider()
                     .GetService<IConfiguration>()!
-                    .GetConnectionString("PostgreSQL")));
+                    .GetConnectionString("PostgreSQL"), b => b.MigrationsAssembly("TicTacToe")));
     
     public static IServiceCollection AddMongoConfigured(this IServiceCollection services)
     {

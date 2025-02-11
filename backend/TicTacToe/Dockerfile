@@ -7,9 +7,9 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["TicTacToe/TicTacToe.csproj", "TicTacToe/"]
+COPY ["backend/TicTacToe/TicTacToe.csproj", "TicTacToe/"]
 RUN dotnet restore "TicTacToe/TicTacToe.csproj"
-COPY . .
+COPY ./backend/ .
 WORKDIR "/src/TicTacToe"
 RUN dotnet build "TicTacToe.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
