@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Header from './components/Header';
-import GameCard from './components/GameCard';
-import RatingModal from './components/RatingModal';
+import React, { useState, useRef } from 'react';
+import Header from './components/header';
+import GameCard from './components/gameCard';
+import RatingModal from './components/ratingModal';
 import styles from './gameListPage.module.css';
 import CreateGameModal from "./components/createGameModal.tsx";
 import { useProfile } from "../../contexts/profileContext.tsx";

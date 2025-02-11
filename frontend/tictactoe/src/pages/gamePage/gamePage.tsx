@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import GameBoard from './components/GameBoard';
-import GameLog from './components/GameLog';
+import GameBoard from './components/gameBoard';
+import GameLog from './components/gameLog';
 import styles from './gamePage.module.css';
 import { useProfile } from "../../contexts/profileContext.tsx";
 import {Navigate, useNavigate, useParams} from "react-router-dom";

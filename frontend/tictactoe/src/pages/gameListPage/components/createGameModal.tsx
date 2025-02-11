@@ -5,7 +5,7 @@ import Button from '../../../components/button/button.tsx';
 import api from '../../../client/axiosInstance.ts';
 import {useNavigate} from "react-router-dom";
 
-const CreateGameModal = ({ onClose }) => {
+const CreateGameModal = ({ isOpen, onClose }) => {
   const [maxRating, setMaxRating] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
