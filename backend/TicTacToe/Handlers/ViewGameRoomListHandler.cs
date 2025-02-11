@@ -21,6 +21,7 @@ public class ViewGameRoomListHandler(
             .Skip(request.Offset)
             .Take(request.Limit)
             .Include(gr => gr.Players)
+            .OrderBy(gr => gr.CreatedAt)
             .ToListAsync(cancellationToken: cancellationToken);
 
         var response = 
