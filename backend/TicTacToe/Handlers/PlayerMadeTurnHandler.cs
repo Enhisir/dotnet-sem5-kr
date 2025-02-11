@@ -1,20 +1,22 @@
-using Microsoft.AspNetCore.SignalR;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Common.CQRS;
 using TicTacToe.Helpers;
-using TicTacToe.Hubs;
+using TicTacToe.Messages;
 using TicTacToe.Requests;
 using TicTacToe.Responses;
 using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories.Abstractions;
 using TicTatToe.Data.Storage;
+using State = TicTatToe.Data.Enum.State;
 
 namespace TicTacToe.Handlers;
 
 public class PlayerMadeTurnHandler(
     IRepository<GameRoom> gameRoomRepository,
-    MongoStorage<Rating> ratingStorage
+    MongoStorage<Rating> ratingStorage,
+    IPublishEndpoint publishEndpoint
     // IHubContext<GameRoomHub> hubContext
 ) : IHandler<PlayerMadeTurnRequest, BaseResponse>
 {
@@ -59,29 +61,86 @@ public class PlayerMadeTurnHandler(
             await ratingStorage.UpdateAsync(
                 p => !p.UserName.Equals(gameRoom.CurrentTurn), 
                 nextPlayerRating);
-            
-            // TODO: выкинуть чела при достижении лимита по рейтингу
-            // hubContext.Clients.Client().InvokeCoreAsync("Abort", [], cancellationToken);
+
+            if (currentPlayerRating.Value > gameRoom.MaxRating)
+            {
+                await publishEndpoint.Publish(
+                    // TODO: костыль, фронтенд узнает своего клиента в сообщении и принудительно дисконнектится.
+                    // TODO: Если возможно передлетать, лучше переделать.
+                    new PlayerLeftMessage
+                    {
+                        Value = new GameRoomResponse
+                        {
+                            Id = gameRoom.Id,
+                            CurrentTurn = gameRoom.CurrentTurn,
+                            MaxRating = gameRoom.MaxRating,
+                            State = gameRoom.State,
+                            Users = gameRoom.Players!.Select(p => p.UserName).ToList(),
+                        }
+                    }, cancellationToken);
+            }
+            else
+                await SetNewGameAsync(gameRoom, cancellationToken);
         }
         else if (TicTacToeHelper.IsGameOver(battleState)) // все поля для победы заполнены
-            await SetNewGameAsync(gameRoom);
+            await SetNewGameAsync(gameRoom, cancellationToken);
         else
-            await UpdateGameStateAsync(gameRoom, battleState);
+            await UpdateGameStateAsync(gameRoom, battleState, request.PointX, request.PointY, cancellationToken);
 
-        throw new NotImplementedException();
+        return BaseResponse.Success;
     }
-
-    private async Task SetNewGameAsync(GameRoom gameRoom)
+    
+    private async Task EndGame(
+        GameRoom gameRoom, 
+        CancellationToken cancellationToken)
     {
         gameRoom.BattleState = 0b00;
         gameRoom.CurrentTurn = gameRoom.Players![Random.Shared.Next(0, 2)].UserName;
         gameRoom.CurrentSign = Sign.X;
         await gameRoomRepository.UpdateAsync(gameRoom);
-        // TODO: разослать сообщение
+        await publishEndpoint.Publish(
+            new GameStartedMessage
+            {
+                Value = new GameRoomResponse
+                {
+                    Id = gameRoom.Id,
+                    CurrentTurn = gameRoom.CurrentTurn,
+                    MaxRating = gameRoom.MaxRating,
+                    State = gameRoom.State,
+                    Users = gameRoom.Players.Select(p => p.UserName).ToList(),
+                }
+            }, cancellationToken);
+    }
+
+    private async Task SetNewGameAsync(
+        GameRoom gameRoom, 
+        CancellationToken cancellationToken)
+    {
+        gameRoom.BattleState = 0b00;
+        gameRoom.CurrentTurn = gameRoom.Players![Random.Shared.Next(0, 2)].UserName;
+        gameRoom.CurrentSign = Sign.X;
+        await gameRoomRepository.UpdateAsync(gameRoom);
+        await publishEndpoint.Publish(
+            new GameStartedMessage
+            {
+                Value = new GameRoomResponse
+                {
+                    Id = gameRoom.Id,
+                    CurrentTurn = gameRoom.CurrentTurn,
+                    MaxRating = gameRoom.MaxRating,
+                    State = gameRoom.State,
+                    Users = gameRoom.Players.Select(p => p.UserName).ToList(),
+                }
+            }, cancellationToken);
     }
     
-    private async Task UpdateGameStateAsync(GameRoom gameRoom, int[][] battleState)
+    private async Task UpdateGameStateAsync(
+        GameRoom gameRoom, 
+        int[][] battleState, 
+        int x, int y, 
+        CancellationToken cancellationToken)
     {
+        var prevPlayer = gameRoom.CurrentTurn!;
         gameRoom.BattleState = TicTacToeHelper.Compress(battleState);
         gameRoom.CurrentTurn = 
             gameRoom.Players!
@@ -89,6 +148,23 @@ public class PlayerMadeTurnHandler(
                 .UserName;
         gameRoom.CurrentSign = gameRoom.CurrentSign == Sign.X ? Sign.O : Sign.X;
         await gameRoomRepository.UpdateAsync(gameRoom);
-        // TODO: разослать сообщение
+        await publishEndpoint.Publish(
+            new PlayerMadeTurnMessage 
+            {
+                Value =
+                {
+                    PlayerUserName = prevPlayer,
+                    PointX = x,
+                    PointY = y,
+                    GameRoom = new GameRoomResponse
+                    {
+                        Id = gameRoom.Id,
+                        CurrentTurn = gameRoom.CurrentTurn,
+                        MaxRating = gameRoom.MaxRating,
+                        State = gameRoom.State,
+                        Users = gameRoom.Players!.Select(p => p.UserName).ToList(),
+                    }
+                }
+            }, cancellationToken);
     }
 }

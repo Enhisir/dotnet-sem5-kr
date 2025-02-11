@@ -56,12 +56,15 @@ public class GameRoomHub(
     public override async Task OnDisconnectedAsync(Exception? exception) // Leave
     {
         var items = new GameRoomHubContextItemsHelper(Context.Items);
-        var response = await mediator.Send(new LeaveGameRoomRequest(items.GameRoomId, items.UserName));
+        var response = await mediator.Send(
+            new LeaveGameRoomRequest(items.GameRoomId, items.UserName));
         
         if (!response.IsSuccess)
         {
             Context.Abort();
-            logger.LogWarning("OnDisconnectedAsync ended up with failure: {responseMessage}", response.Message);
+            logger.LogWarning(
+                "OnDisconnectedAsync ended up with failure: {responseMessage}", 
+                response.Message);
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -75,7 +78,9 @@ public class GameRoomHub(
         if (!response.IsSuccess)
         {
             Context.Abort();
-            logger.LogWarning("EnterGameRoomAsync ended up with failure: {responseMessage}", response.Message);
+            logger.LogWarning(
+                "EnterGameRoomAsync ended up with failure: {responseMessage}", 
+                response.Message);
         }
     }
     
@@ -83,17 +88,14 @@ public class GameRoomHub(
     {
         var items = new GameRoomHubContextItemsHelper(Context.Items);
         
-        var response = await mediator.Send(new EnterGameRoomRequest(items.GameRoomId, items.UserName));
+        var response = await mediator.Send(
+            new PlayerMadeTurnRequest(items.GameRoomId, items.UserName, x, y));
         if (!response.IsSuccess)
         {
             Context.Abort();
-            logger.LogWarning("EnterGameRoomAsync ended up with failure: {responseMessage}", response.Message);
+            logger.LogWarning(
+                "EnterGameRoomAsync ended up with failure: {responseMessage}", 
+                response.Message);
         }
     }
-
-    // сделал ход
-    // обновить логику
-    
-    // сел за место игрока
-    // обновить состояние
 }

@@ -14,7 +14,7 @@ public class GameRoomResponse
         [0, 0, 0]
     ];
     
-    public uint MaxRating { get; set; }
+    public int MaxRating { get; set; }
     
     public string? CurrentTurn { get; set; }
 

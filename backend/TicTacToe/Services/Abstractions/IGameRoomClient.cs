@@ -1,12 +1,12 @@
-using TicTacToe.Responses;
+using TicTacToe.Hubs;
 
 namespace TicTacToe.Services.Abstractions;
 
 public interface IGameRoomClient
 {
-    Task GameStarted(GameRoomResponse info);
-    Task GameEnded(GameRoomResponse info);
-    Task PlayerJoined(GameRoomResponse info);
-    Task PlayerLeft(GameRoomResponse info);
-    Task PlayerMadeTurn(PlayerMadeTurnResponse info);
+    Task GameStarted(SignalRMessage info);
+    Task GameEnded(SignalRMessage info);
+    Task PlayerJoined(SignalRMessage info);
+    Task PlayerLeft(SignalRMessage info);
+    Task PlayerMadeTurn(SignalRMessage info);
 }

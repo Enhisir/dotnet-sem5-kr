@@ -1,6 +1,7 @@
 using TicTacToe.Common.Extensions;
 using TicTacToe.Extensions;
 using TicTacToe.Helpers;
+using TicTacToe.Hubs;
 using TicTatToe.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,8 +27,6 @@ builder.Services
 
 var app = builder.Build();
 
-app.MapControllers();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -38,8 +37,16 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseCors(
     opt => opt
-        .AllowAnyOrigin()
         .AllowAnyMethod()
-        .AllowAnyHeader());
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(_ => true)
+        .AllowCredentials());
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<GameRoomHub>("/api/v1/hubs/gameRoom");
 
 app.Run();

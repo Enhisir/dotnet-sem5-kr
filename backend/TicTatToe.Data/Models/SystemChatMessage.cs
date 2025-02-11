@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TicTatToe.Data.Models;
 
 public class SystemChatMessage
@@ -8,5 +10,6 @@ public class SystemChatMessage
     
     public DateTime Timestamp { get; set; }
 
+    [MaxLength(256)]
     public string Message { get; set; } = null!;
 }

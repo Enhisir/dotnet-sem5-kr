@@ -62,6 +62,7 @@ public static class ConfigurationExtensions
             .AddScoped<IHandler<CreateGameRequest, IResult>, CreateGameHandler>()
             .AddScoped<IHandler<ViewGameRoomListRequest, IResult>, ViewGameRoomListHandler>()
             .AddScoped<IHandler<EnterGameRoomRequest, BaseResponse>, EnterGameRoomHandler>()
-            .AddScoped<IHandler<LeaveGameRoomRequest, BaseResponse>, LeaveGameRoomHandler>();
+            .AddScoped<IHandler<LeaveGameRoomRequest, BaseResponse>, LeaveGameRoomHandler>()
+            .AddScoped<IHandler<PlayerMadeTurnRequest, BaseResponse>, PlayerMadeTurnHandler>();
     }
 }
