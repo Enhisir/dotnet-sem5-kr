@@ -23,7 +23,7 @@ public static class DatabaseExtensions
     
     public static IServiceCollection AddMongoConfigured(this IServiceCollection services)
     {
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        // BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.String));
         
         var configuration = 
             services
