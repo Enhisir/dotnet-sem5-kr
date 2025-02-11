@@ -8,6 +8,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TicTacToe/TicTacToe.csproj", "TicTacToe/"]
+COPY ["TicTacToe.Common/TicTacToe.Common.csproj", "TicTacToe.Common/"]
+COPY ["TicTatToe.Data/TicTatToe.Data.csproj", "TicTatToe.Data/"]
 RUN dotnet restore "TicTacToe/TicTacToe.csproj"
 COPY . .
 WORKDIR "/src/TicTacToe"
