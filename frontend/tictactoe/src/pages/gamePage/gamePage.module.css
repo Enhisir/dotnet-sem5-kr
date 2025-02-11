@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.boardContainer {
+  flex: 1;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.currentPlayer {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: left;
+  font-size: 20px;
+}
+
+.joinButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.joinButton:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.joinButton:hover {
+  background-color: #218838;
+}
+
+.log {
+  flex: 1;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logEntry {
+  padding: 5px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
