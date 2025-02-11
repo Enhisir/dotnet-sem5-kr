@@ -18,6 +18,7 @@ class SignalRService {
       .withUrl(`${import.meta.env.VITE_API_HOST}/hubs/gameRoom?gameRoomId=${gameRoomId}`, {
         accessTokenFactory: () => token || '',
         withCredentials: true,
+        transport: HttpTransportType.LongPolling
       })
       .withAutomaticReconnect()
       .build();

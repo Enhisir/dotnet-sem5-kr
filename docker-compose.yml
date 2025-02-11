@@ -1,14 +1,25 @@
 ﻿services:
-  # tictactoe:
-  #   image: tictactoe
-  #   build:
-  #     context: .
-  #     dockerfile: backend/TicTacToe/Dockerfile
-  #   depends_on:
-  #     - postgres
-  #     - mongo
-  #     - rabbitmq
+  frontend:
+    build:
+      context: ./frontend/tictactoe
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" 
+    environment:
+      VITE_API_HOST: "http://tictactoe:5000/api/v1"
+    depends_on:
+      - tictactoe
 
+  tictactoe:
+    image: tictactoe
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - mongo
+      - rabbitmq
+  
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -31,6 +42,7 @@
       - "8081:8081"
     depends_on:
       - mongo
+
 
   postgres:
     image: postgres:latest
