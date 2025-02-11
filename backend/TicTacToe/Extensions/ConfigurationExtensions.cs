@@ -1,9 +1,11 @@
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TicTacToe.Common.CQRS;
 using TicTacToe.Common.Helpers;
 using TicTacToe.Common.Helpers.Abstractions;
+using TicTacToe.Consumers;
 using TicTacToe.Handlers;
 using TicTacToe.Requests;
 using TicTacToe.Responses;
@@ -64,5 +66,43 @@ public static class ConfigurationExtensions
             .AddScoped<IHandler<EnterGameRoomRequest, BaseResponse>, EnterGameRoomHandler>()
             .AddScoped<IHandler<LeaveGameRoomRequest, BaseResponse>, LeaveGameRoomHandler>()
             .AddScoped<IHandler<PlayerMadeTurnRequest, BaseResponse>, PlayerMadeTurnHandler>();
+    }
+    
+    public static IServiceCollection AddMassTransitConfigured(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddMassTransit(x =>
+        {
+            var configuration =
+                serviceCollection.BuildServiceProvider()
+                    .GetService<IConfiguration>()!;
+
+            x.AddConsumer<GameStartedConsumer>()
+                .Endpoint(e => e.Name = nameof(GameStartedConsumer));
+            x.AddConsumer<GameEndedConsumer>()
+                .Endpoint(e => e.Name = nameof(GameEndedConsumer));
+            x.AddConsumer<PlayerJoinedConsumer>()
+                .Endpoint(e => e.Name = nameof(PlayerJoinedConsumer));
+            x.AddConsumer<PlayerLeftConsumer>()
+                .Endpoint(e => e.Name = nameof(PlayerLeftConsumer));
+            x.AddConsumer<PlayerMadeTurnConsumer>()
+                .Endpoint(e => e.Name = nameof(PlayerMadeTurnConsumer));
+
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMQ:Host"], configuration["RabbitMQ:VHost"], h =>
+                {
+                    h.Username(configuration["RabbitMQ:Username"]!);
+                    h.Password(configuration["RabbitMQ:Password"]!);
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
+        serviceCollection.AddScoped<GameStartedConsumer>();
+        serviceCollection.AddScoped<GameEndedConsumer>();
+        serviceCollection.AddScoped<PlayerJoinedConsumer>();
+        serviceCollection.AddScoped<PlayerLeftConsumer>();
+        serviceCollection.AddScoped<PlayerMadeTurnConsumer>();
+        return serviceCollection;
     }
 }

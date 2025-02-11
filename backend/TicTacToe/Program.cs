@@ -16,6 +16,7 @@ builder.Services
     .AddJwtConfigured()
     .AddDbContextConfigured()
     .AddMongoConfigured()
+    .AddMassTransitConfigured()
     .AddRepositories()
     .AddServices()
     .AddMediatorConfigured(
@@ -24,6 +25,7 @@ builder.Services
         TicTatToe.Data.Helpers.AssemblyReference.Assembly)
     .AddHandlers()
     .AddControllers();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
