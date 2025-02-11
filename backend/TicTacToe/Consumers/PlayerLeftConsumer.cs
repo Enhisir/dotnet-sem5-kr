@@ -38,7 +38,5 @@ public class PlayerLeftConsumer(
         await hubContext.Clients
             .Group(msg.Value.Id.ToString())
             .SendAsync("PlayerLeft", signalRMessage);
-        
-        // TODO: добавить алгоритм добавления пользователя из числа наблюдателей
     }
 }
