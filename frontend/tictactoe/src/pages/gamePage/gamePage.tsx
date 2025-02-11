@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import GameBoard from './components/GameBoard';
 import GameLog from './components/GameLog';
 import styles from './gamePage.module.css';
-import Button from "../../components/button/button.tsx";
+import {useProfile} from "../../contexts/ProfileContext.tsx";
+import {Navigate} from "react-router-dom";
 
 const GamePage: React.FC = () => {
   const [currentPlayer, setCurrentPlayer] = useState('X');
   const [log, setLog] = useState<string[]>([]);
   const [isJoined, setIsJoined] = useState(false);
+  const [profile, loading] = useProfile();
+  if (profile == null && !loading) return <Navigate to="/login"></Navigate>;
 
   const handleMove = (cellIndex: number) => {
     setLog((prevLog) => [...prevLog, `Игрок ${currentPlayer} сделал ход в клетку ${cellIndex + 1}`]);
@@ -27,9 +30,9 @@ const GamePage: React.FC = () => {
           <div>Максимальный рейтинг: 1500</div>
           <div>Игрок 1: player1</div>
           <div>Игрок 2: {isJoined ? 'player2' : 'не готов'}</div>
-          <Button className={styles.joinButton} onClick={handleJoinLeave}>
+          <button className={styles.joinButton} onClick={handleJoinLeave}>
             {isJoined ? 'Покинуть игру' : 'Присоединиться'}
-          </Button>
+          </button>
         </div>
       </div>
       <GameLog log={log} />
