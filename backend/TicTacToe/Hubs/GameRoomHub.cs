@@ -62,6 +62,7 @@ public class GameRoomHub(
         await publishEndpoint.Publish(
             new PlayerJoinedMessage
             {
+                Player = username,
                 Value = new GameRoomResponse
                 {
                     Id = gameRoom!.Id,
