@@ -1,6 +1,7 @@
 using MongoDB.Driver.Linq;
 using TicTacToe.Common.CQRS;
 using TicTacToe.Requests;
+using TicTacToe.Responses;
 using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories.Abstractions;
@@ -11,9 +12,9 @@ public class LeaveGameRoomHandler(
     IRepository<GameRoom> gameRoomRepository,
     IRepository<GameRoomPublic> gameRoomPublicRepository,
     IHasTransactions transactions
-    ) : IHandler<LeaveGameRoomRequest, IResult>
+    ) : IHandler<LeaveGameRoomRequest, BaseResponse>
 {
-    public async Task<IResult> Execute(
+    public async Task<BaseResponse> Execute(
         LeaveGameRoomRequest request, 
         CancellationToken cancellationToken)
     {
@@ -21,36 +22,31 @@ public class LeaveGameRoomHandler(
             await gameRoomRepository
                 .GetSingleOrDefault(gr => gr.Id.Equals(request.GameRoomId));
         if (gameRoom is null)
-            return Results.NotFound("Game room not found");
+            return BaseResponse.Failure("Game room not found");
         
         var alreadyPlayersConnected =
             await gameRoomPublicRepository
                 .GetRange()
-                .Where(grp => grp.GameRoomId.Equals(gameRoom.Id) 
-                              && grp.Status.Equals(PlayerStatus.Player))
+                .Where(grp => grp.GameRoomId.Equals(gameRoom.Id))
                 .ToListAsync(cancellationToken: cancellationToken);
         var player = 
             alreadyPlayersConnected.SingleOrDefault(
                 p => p.UserName.Equals(
                     request.UserName, StringComparison.OrdinalIgnoreCase));
         if (player is null)
-            return Results.NotFound("You're not in the room");
+            return BaseResponse.Failure("You're not in the room");
 
         try
         {
             transactions.BeginTransaction();
             await gameRoomPublicRepository.RemoveAsync(player);
-            if (alreadyPlayersConnected.Count - 1 == 0)
-            {
-                await gameRoomRepository.RemoveAsync(gameRoom);
-            }
-            else
-            {
-                gameRoom.BattleState = 0x0;
-                gameRoom.State = State.Open;
-                gameRoom.LastTurn = string.Empty;
-                await gameRoomRepository.UpdateAsync(gameRoom);
-            }
+            gameRoom.BattleState = 0b00;
+            gameRoom.CurrentTurn = string.Empty;
+            gameRoom.CurrentSign = Sign.Empty;
+            gameRoom.State = alreadyPlayersConnected.Count - 1 == 0 
+                ? State.Closed 
+                : State.Open;
+            await gameRoomRepository.UpdateAsync(gameRoom);
             transactions.CommitTransaction();
         }
         catch
@@ -58,7 +54,10 @@ public class LeaveGameRoomHandler(
             transactions.RollbackTransaction();
             throw;
         }
+        
+        // Сообщить всем что вышел игрок такой-то
+        // Через рэббит
 
-        return Results.Ok();
+        return BaseResponse.Success;
     }
 }

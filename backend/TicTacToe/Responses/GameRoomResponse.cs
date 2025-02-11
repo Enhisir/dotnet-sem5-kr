@@ -17,4 +17,6 @@ public class GameRoomResponse
     public uint MaxRating { get; set; }
     
     public string? CurrentTurn { get; set; }
+
+    public List<string> Users { get; set; } = null!;
 }

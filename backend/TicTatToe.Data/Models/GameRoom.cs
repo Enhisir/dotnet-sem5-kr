@@ -11,6 +11,10 @@ public class GameRoom
     public uint BattleState { get; set; }
     
     public uint MaxRating { get; set; }
+
+    public string? CurrentTurn { get; set; }
     
-    public string? LastTurn { get; set; }
+    public Sign? CurrentSign { get; set; }
+    
+    public List<GameRoomPublic>? Players { get; set; }
 }

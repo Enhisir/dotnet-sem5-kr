@@ -19,7 +19,7 @@ public static class ModelBuilderExtension
             .HasForeignKey<GameRoomPublic>(grp => grp.UserName);
         modelBuilder
             .Entity<GameRoom>()
-            .HasMany<GameRoomPublic>()
+            .HasMany<GameRoomPublic>(gr => gr.Players)
             .WithOne()
             .HasForeignKey(grp => grp.GameRoomId);
         modelBuilder

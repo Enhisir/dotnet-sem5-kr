@@ -1,11 +1,12 @@
 using TicTacToe.Common.CQRS;
 using TicTacToe.Requests;
+using TicTatToe.Data.Models;
 using TicTatToe.Data.Storage;
 
 namespace TicTacToe.Handlers;
 
 public class GetRatingHandler(
-    RatingMongoStorage ratingMongoStorage
+    MongoStorage<Rating> ratingMongoStorage
 ) : IHandler<GetRatingRequest, IResult>
 {
     public async Task<IResult> Execute(

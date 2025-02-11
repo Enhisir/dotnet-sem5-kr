@@ -23,12 +23,13 @@ public class CreateGameHandler(
         if (maybePlaying is not null)
             return Results.Conflict("You're already playing in another room!");
 
-        var newGame = new GameRoom()
+        var newGame = new GameRoom
         {
             Id = Guid.NewGuid(),
             State = State.Open,
-            BattleState = 0x0,
-            LastTurn = String.Empty,
+            BattleState = 0b00,
+            CurrentTurn = string.Empty,
+            CurrentSign = Sign.Empty,
             MaxRating = request.MaxRating
         };
         var firstPlayer = new GameRoomPublic

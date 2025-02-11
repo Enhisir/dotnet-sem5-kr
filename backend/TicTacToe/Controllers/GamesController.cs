@@ -19,11 +19,11 @@ public class GamesController(IMediator mediator) : ControllerBase
     public async Task<IResult> CreateGame(CreateGameDto gameDto)
         => await mediator.Send(new CreateGameRequest(User.Identity!.Name!, gameDto.MaxRating));
     
-    [HttpPost("enter")]
-    public async Task<IResult> EnterGameRoom(EnterGameRoomDto gameDto)
-        => await mediator.Send(new EnterGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
+    // [HttpPost("enter")]
+    // public async Task<IResult> EnterGameRoom(EnterGameRoomDto gameDto)
+    //     => await mediator.Send(new EnterGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
     
-    [HttpPost("leave")]
-    public async Task<IResult> LeaveGameRoom(LeaveGameDto gameDto)
-        => await mediator.Send(new LeaveGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
+    // [HttpPost("leave")]
+    // public async Task<IResult> LeaveGameRoom(LeaveGameDto gameDto)
+    //     => await mediator.Send(new LeaveGameRoomRequest(gameDto.GameRoomId, User.Identity!.Name!));
 }

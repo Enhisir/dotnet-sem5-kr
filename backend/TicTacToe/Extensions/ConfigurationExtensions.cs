@@ -6,6 +6,8 @@ using TicTacToe.Common.Helpers;
 using TicTacToe.Common.Helpers.Abstractions;
 using TicTacToe.Handlers;
 using TicTacToe.Requests;
+using TicTacToe.Responses;
+using TicTacToe.Services;
 using TicTacToe.Services.Abstractions;
 
 namespace TicTacToe.Extensions;
@@ -44,9 +46,10 @@ public static class ConfigurationExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         return services
-            .AddScoped<IPasswordHasherService, IPasswordHasherService>()
+            .AddSingleton<JwtOptions>()
+            .AddScoped<IPasswordHasherService, PasswordHasherService>()
             .AddScoped<IJwtService, JwtService>()
-            .AddScoped<IAuthService, IAuthService>();
+            .AddScoped<IAuthService, AuthService>();
     }
 
     public static IServiceCollection AddHandlers(this IServiceCollection services)
@@ -58,7 +61,7 @@ public static class ConfigurationExtensions
             .AddScoped<IHandler<GetRatingRequest, IResult>, GetRatingHandler>()
             .AddScoped<IHandler<CreateGameRequest, IResult>, CreateGameHandler>()
             .AddScoped<IHandler<ViewGameRoomListRequest, IResult>, ViewGameRoomListHandler>()
-            .AddScoped<IHandler<EnterGameRoomRequest, IResult>, EnterGameRoomHandler>()
-            .AddScoped<IHandler<LeaveGameRoomRequest, IResult>, LeaveGameRoomHandler>();
+            .AddScoped<IHandler<EnterGameRoomRequest, BaseResponse>, EnterGameRoomHandler>()
+            .AddScoped<IHandler<LeaveGameRoomRequest, BaseResponse>, LeaveGameRoomHandler>();
     }
 }
