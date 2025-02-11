@@ -54,6 +54,10 @@ public static class ConfigurationExtensions
         return services
             .AddScoped<IHandler<SignUpRequest, IResult>, SignUpHandler>()
             .AddScoped<IHandler<SignInRequest, IResult>, SignInHandler>()
-            .AddScoped<IHandler<RefreshRequest, IResult>, RefreshHandler>();
+            .AddScoped<IHandler<RefreshRequest, IResult>, RefreshHandler>()
+            .AddScoped<IHandler<GetRatingRequest, IResult>, GetRatingHandler>()
+            .AddScoped<IHandler<CreateGameRequest, IResult>, CreateGameHandler>()
+            .AddScoped<IHandler<ViewGameRoomListRequest, IResult>, ViewGameRoomListHandler>()
+            .AddScoped<IHandler<EnterGameRoomRequest, IResult>, EnterGameRoomHandler>();
     }
 }

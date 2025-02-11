@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using TicTatToe.Data.Extensions;
 using TicTatToe.Data.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace TicTatToe.Data;
+namespace TicTatToe.Data.Storage;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

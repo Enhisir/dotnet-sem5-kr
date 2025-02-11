@@ -11,11 +11,12 @@ public static class ModelBuilderExtension
         modelBuilder
             .Entity<User>()
             .HasKey(u => u.UserName);
+        
         modelBuilder
             .Entity<User>()
             .HasOne<GameRoomPublic>()
             .WithOne()
-            .HasForeignKey<GameRoomPublic>(grp => grp.UserId);
+            .HasForeignKey<GameRoomPublic>(grp => grp.UserName);
         modelBuilder
             .Entity<GameRoom>()
             .HasMany<GameRoomPublic>()
@@ -23,13 +24,7 @@ public static class ModelBuilderExtension
             .HasForeignKey(grp => grp.GameRoomId);
         modelBuilder
             .Entity<GameRoomPublic>()
-            .HasKey(grp => new { grp.GameRoomId, grp.UserId });
-        
-        modelBuilder
-            .Entity<GameRoom>()
-            .HasMany<GameRoomPublic>()
-            .WithOne()
-            .HasForeignKey(grp => grp.GameRoomId);
+            .HasKey(grp => new { grp.GameRoomId, grp.UserName });
 
         modelBuilder
             .Entity<SystemChatMessage>()

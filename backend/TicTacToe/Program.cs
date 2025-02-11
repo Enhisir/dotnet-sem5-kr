@@ -12,6 +12,8 @@ builder.Services
 
 builder.Services
     .AddJwtConfigured()
+    .AddDbContextConfigured()
+    .AddMongoConfigured()
     .AddRepositories()
     .AddServices()
     .AddMediatorConfigured(
