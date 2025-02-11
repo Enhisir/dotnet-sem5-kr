@@ -28,6 +28,7 @@ public class CreateGameHandler(
             Id = Guid.NewGuid(),
             State = State.Open,
             BattleState = 0b00,
+            CreatedAt = DateTime.UtcNow.Date,
             CurrentTurn = string.Empty,
             CurrentSign = Sign.Empty,
             MaxRating = request.MaxRating

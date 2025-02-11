@@ -25,7 +25,12 @@ public class ViewGameRoomListHandler(
 
         var response = 
             gamerooms
-            .Select(gr => new ViewGameRoomResponse(gr.Id, gr.Players!.Select(p => p.UserName).ToList()))
+            .Select(gr => new ViewGameRoomResponse(
+                gr.Id, 
+                gr.CreatedAt,
+                gr.State,
+                gr.Players!.Select(p => p.UserName).ToList()
+                ))
             .ToList();
         return Results.Ok(response);
     }
