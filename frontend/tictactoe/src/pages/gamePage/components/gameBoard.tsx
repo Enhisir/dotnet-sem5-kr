@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Cell from './Cell';
 import styles from './gameBoard.module.css';
 

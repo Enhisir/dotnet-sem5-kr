@@ -62,14 +62,14 @@ const GameListPage: React.FC = () => {
       />
       <div ref={lastGameElementRef} style={{height: 1}}/>
       <div className={styles.gameList}>
-        {games.map((game, index) => (
+        {games ? games.map((game, index) => (
           <div
             key={game.id}
             ref={index === games.length - 1 ? lastGameElementRef : null}
           >
             <GameCard game={game}/>
           </div>
-        ))}
+        )) : ''}
       </div>
       {isModalOpen1 && (
         <RatingModal
