@@ -14,8 +14,8 @@ namespace TicTacToe.Handlers;
 
 public class PlayerMadeTurnHandler(
     IRepository<GameRoom> gameRoomRepository,
-    MongoStorage<Rating> ratingStorage,
-    IHubContext<GameRoomHub> hubContext
+    MongoStorage<Rating> ratingStorage
+    // IHubContext<GameRoomHub> hubContext
 ) : IHandler<PlayerMadeTurnRequest, BaseResponse>
 {
     public async Task<BaseResponse> Execute(

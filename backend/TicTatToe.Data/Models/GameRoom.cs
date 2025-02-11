@@ -8,6 +8,8 @@ public class GameRoom
     
     public State State { get; set; }
     
+    public DateTime CreatedAt { get; set; }
+    
     public int BattleState { get; set; }
     
     public int MaxRating { get; set; }
