@@ -1,7 +1,10 @@
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Common.CQRS;
+using TicTacToe.Messages;
 using TicTacToe.Requests;
 using TicTacToe.Responses;
+using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories.Abstractions;
 using TicTatToe.Data.Storage;
@@ -11,7 +14,8 @@ namespace TicTacToe.Handlers;
 public class EnterGameRoomHandler(
     IRepository<GameRoom> gameRoomRepository,
     IRepository<GameRoomPublic> gameRoomPublicRepository,
-    MongoStorage<Rating> ratingStorage
+    MongoStorage<Rating> ratingStorage,
+    IPublishEndpoint publishEndpoint
     ) : IHandler<EnterGameRoomRequest, BaseResponse>
 {
     public async Task<BaseResponse> Execute(
@@ -51,9 +55,30 @@ public class EnterGameRoomHandler(
         };
         await gameRoomPublicRepository.AddAsync(gameRoomPublic);
         
-        // start game logic
-        // отправить сообщение о начале игры по рэббиту
+        await SetNewGameAsync(gameRoom, cancellationToken);
         
         return BaseResponse.Success;
+    }
+    
+    private async Task SetNewGameAsync(
+        GameRoom gameRoom, 
+        CancellationToken cancellationToken)
+    {
+        gameRoom.BattleState = 0b00;
+        gameRoom.CurrentTurn = gameRoom.Players![Random.Shared.Next(0, 2)].UserName;
+        gameRoom.CurrentSign = Sign.X;
+        await gameRoomRepository.UpdateAsync(gameRoom);
+        await publishEndpoint.Publish(
+            new GameStartedMessage
+            {
+                Value = new GameRoomResponse
+                {
+                    Id = gameRoom.Id,
+                    CurrentTurn = gameRoom.CurrentTurn,
+                    MaxRating = gameRoom.MaxRating,
+                    State = gameRoom.State,
+                    Users = gameRoom.Players.Select(p => p.UserName).ToList(),
+                }
+            }, cancellationToken);
     }
 }

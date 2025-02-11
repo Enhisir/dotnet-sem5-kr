@@ -1,6 +1,0 @@
-﻿services:
-  tictactoe:
-    image: tictactoe
-    build:
-      context: .
-      dockerfile: TicTacToe/Dockerfile
