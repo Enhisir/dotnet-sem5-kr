@@ -3,7 +3,7 @@ import Button from '../../components/button/button';
 import Input from '../../components/input/input';
 import classes from './loginPage.module.css';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useProfile } from '../../contexts/ProfileContext';
+import { useProfile } from '../../contexts/profileContext.tsx';
 import api from '../../client/axiosInstance.ts';
 
 interface LoginFormState {
@@ -15,7 +15,6 @@ const LoginPage = () => {
   const [form, setForm] = useState<LoginFormState>({ username: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [profile, loading] = useProfile();
-
   const navigate = useNavigate();
 
   if (profile != null) return <Navigate to="/games" />;
@@ -28,17 +27,27 @@ const LoginPage = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    api.post('/api/v1/auth/sign_in', {
+    api.post('/auth/sign_in', {
       userName: form.username,
       password: form.password,
     })
       .then(response => {
-        const { userName, accessToken } = response.data;
+        const { userName, accessToken, accessTokenExpires, refreshToken } = response.data;
+
         localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('accessTokenExpires', accessTokenExpires.toString());
+        localStorage.setItem('refreshToken', refreshToken);
+
         window.location.reload();
+
+        navigate('/games');
       })
-      .catch(() => {
-        setError('Неверный логин или пароль');
+      .catch(err => {
+        if (err.response && err.response.data?.message) {
+          setError(err.response.data.message);
+        } else {
+          setError('Неверный логин или пароль');
+        }
       });
   };
 

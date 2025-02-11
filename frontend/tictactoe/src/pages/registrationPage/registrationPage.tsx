@@ -4,7 +4,7 @@ import Input from '../../components/input/input.tsx';
 import classes from './registrationPage.module.css';
 import {Navigate, useNavigate} from 'react-router-dom';
 import api from '../../client/axiosInstance.ts';
-import {useProfile} from "../../contexts/ProfileContext.tsx";
+import {useProfile} from "../../contexts/profileContext.tsx";
 
 interface FormState {
   username: string;
@@ -37,7 +37,7 @@ const RegistrationPage = () => {
     }
 
     const payload = {
-      username: form.username,
+      userName: form.username,
       password: form.password,
     };
 

@@ -4,7 +4,7 @@ import RegistrationPage from './pages/registrationPage/registrationPage';
 import LoginPage from './pages/loginPage/loginPage';
 import GameListPage from './pages/gameListPage/gameListPage';
 import GamePage from './pages/gamePage/gamePage';
-import { ProfileProvider } from './contexts/ProfileContext';
+import { ProfileProvider } from './contexts/profileContext.tsx';
 import './App.css'
 
 function App() {

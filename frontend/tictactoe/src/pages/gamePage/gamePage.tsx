@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import GameBoard from './components/GameBoard';
 import GameLog from './components/GameLog';
 import styles from './gamePage.module.css';
-import {useProfile} from "../../contexts/ProfileContext.tsx";
+import {useProfile} from "../../contexts/profileContext.tsx";
 import {Navigate} from "react-router-dom";
 
 const GamePage: React.FC = () => {
