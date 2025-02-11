@@ -4,8 +4,9 @@ import GameCard from './components/GameCard';
 import RatingModal from './components/RatingModal';
 import styles from './gameListPage.module.css';
 import CreateGameModal from "./components/createGameModal.tsx";
-import {useProfile} from "../../contexts/ProfileContext.tsx";
-import {Navigate} from "react-router-dom";
+import { useProfile } from "../../contexts/profileContext.tsx";
+import { Navigate, useNavigate } from "react-router-dom";
+import api from "../../client/axiosInstance.ts";
 
 const games = [
   { id: 1, username: 'player1', date: '10.02.2025', status: 'ожидание', ratingAllowed: true },
@@ -17,23 +18,15 @@ const GameListPage: React.FC = () => {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [profile, loading] = useProfile();
-  if (profile == null && !loading) return <Navigate to="/login"></Navigate>;
+  const navigate = useNavigate();
 
-  const handleOpenModal1 = () => {
-    setIsModalOpen1(true);
-  };
+  if (profile == null && !loading) return <Navigate to="/login" />;
 
-  const handleCloseModal1 = () => {
-    setIsModalOpen1(false);
-  };
+  const handleOpenModal1 = () => setIsModalOpen1(true);
+  const handleCloseModal1 = () => setIsModalOpen1(false);
 
-  const handleOpenModal2 = () => {
-    setIsModalOpen2(true);
-  };
-
-  const handleCloseModal2 = () => {
-    setIsModalOpen2(false);
-  };
+  const handleOpenModal2 = () => setIsModalOpen2(true);
+  const handleCloseModal2 = () => setIsModalOpen2(false);
 
   return (
     <div className={styles.container}>
@@ -46,14 +39,20 @@ const GameListPage: React.FC = () => {
           <GameCard key={game.id} game={game} />
         ))}
       </div>
-      {isModalOpen1 &&
+      {isModalOpen1 && (
         <RatingModal
           isOpen={true}
           onClose={handleCloseModal1}
-          username={profile?.username}
+          username={profile?.userName}
           rating={profile?.rating}
-        />}
-      {isModalOpen2 && <CreateGameModal isOpen={true} onClose={handleCloseModal2} />}
+        />
+      )}
+      {isModalOpen2 && (
+        <CreateGameModal
+          isOpen={true}
+          onClose={handleCloseModal2}
+        />
+      )}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from '../client/axiosInstance.ts'; // Клиент для API-запросов
+import axios from '../client/axiosInstance.ts';
 
 interface Profile {
-  username: string;
+  userName: string;
   rating: number;
 }
 
@@ -28,8 +28,9 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('/api/v1/users/rating');
-        setProfile({ username: response.data.username, rating: response.data.rating });
+        const response = await axios.get('/users/rating');
+        console.log(response)
+        setProfile({ userName: response.data.userName, rating: response.data.value });
       } catch {
         setProfile(null);
       } finally {
