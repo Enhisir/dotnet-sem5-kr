@@ -12,12 +12,7 @@ public class PlayerJoinedConsumer(
     IHubContext<GameRoomHub> hubContext
 ) : IConsumer<PlayerJoinedMessage>
 {
-    public Task Consume(ConsumeContext<PlayerJoinedMessage> context)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public async Task Consume(ConsumeContext<PlayerLeftMessage> context)
+    public async Task Consume(ConsumeContext<PlayerJoinedMessage> context)
     {
         var msg = context.Message;
         

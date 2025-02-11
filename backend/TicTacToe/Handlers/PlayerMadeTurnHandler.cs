@@ -61,7 +61,8 @@ public class PlayerMadeTurnHandler(
             await ratingStorage.UpdateAsync(
                 p => !p.UserName.Equals(gameRoom.CurrentTurn), 
                 nextPlayerRating);
-
+            await EndGameAsync(gameRoom, currentPlayer.UserName, cancellationToken);
+            
             if (currentPlayerRating.Value > gameRoom.MaxRating)
             {
                 await publishEndpoint.Publish(
@@ -83,31 +84,36 @@ public class PlayerMadeTurnHandler(
                 await SetNewGameAsync(gameRoom, cancellationToken);
         }
         else if (TicTacToeHelper.IsGameOver(battleState)) // все поля для победы заполнены
+        {
+            await EndGameAsync(gameRoom, string.Empty, cancellationToken); // Если поле пустое - значит ничья
             await SetNewGameAsync(gameRoom, cancellationToken);
+        }
         else
             await UpdateGameStateAsync(gameRoom, battleState, request.PointX, request.PointY, cancellationToken);
 
         return BaseResponse.Success;
     }
     
-    private async Task EndGame(
-        GameRoom gameRoom, 
+    private async Task EndGameAsync(
+        GameRoom gameRoom,
+        string winner,
         CancellationToken cancellationToken)
     {
         gameRoom.BattleState = 0b00;
-        gameRoom.CurrentTurn = gameRoom.Players![Random.Shared.Next(0, 2)].UserName;
-        gameRoom.CurrentSign = Sign.X;
+        gameRoom.CurrentSign = Sign.Empty;
+        gameRoom.State = State.Open;
         await gameRoomRepository.UpdateAsync(gameRoom);
         await publishEndpoint.Publish(
-            new GameStartedMessage
+            new GameEndedMessage
             {
+                Winner = winner,
                 Value = new GameRoomResponse
                 {
                     Id = gameRoom.Id,
                     CurrentTurn = gameRoom.CurrentTurn,
                     MaxRating = gameRoom.MaxRating,
                     State = gameRoom.State,
-                    Users = gameRoom.Players.Select(p => p.UserName).ToList(),
+                    Users = gameRoom.Players!.Select(p => p.UserName).ToList(),
                 }
             }, cancellationToken);
     }

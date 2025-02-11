@@ -39,6 +39,6 @@ public class PlayerLeftConsumer(
             .Group(msg.Value.Id.ToString())
             .SendAsync("PlayerLeft", signalRMessage);
         
-        // добавить алгоритм добавления пользователя из числа наблюдателей
+        // TODO: добавить алгоритм добавления пользователя из числа наблюдателей
     }
 }
