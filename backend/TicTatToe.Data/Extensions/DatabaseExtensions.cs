@@ -19,11 +19,11 @@ public static class DatabaseExtensions
                 services
                     .BuildServiceProvider()
                     .GetService<IConfiguration>()!
-                    .GetConnectionString("PostgreSQL")));
+                    .GetConnectionString("PostgreSQL"), b => b.MigrationsAssembly("TicTacToe")));
     
     public static IServiceCollection AddMongoConfigured(this IServiceCollection services)
     {
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        // BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.String));
         
         var configuration = 
             services

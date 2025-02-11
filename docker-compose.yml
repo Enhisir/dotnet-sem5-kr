@@ -6,12 +6,14 @@
     ports:
       - "80:80" 
     environment:
-      VITE_API_HOST: "http://tictactoe:5000/api/v1"
+      VITE_API_HOST: "http://tictactoe:5188/api/v1"
     depends_on:
       - tictactoe
 
   tictactoe:
     image: tictactoe
+    ports:
+      - "5188:5188" 
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -19,6 +21,30 @@
       - postgres
       - mongo
       - rabbitmq
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongo:27017/
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+
 
   postgres:
     image: postgres:latest
@@ -60,3 +86,4 @@ volumes:
   postgres_data:
   mongo_data:
   rabbitmq_data:
+  pgadmin_data:
