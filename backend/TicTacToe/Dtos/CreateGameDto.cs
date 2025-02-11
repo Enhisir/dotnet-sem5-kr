@@ -1,3 +1,3 @@
 namespace TicTacToe.Dtos;
 
-public record CreateGameDto(uint MaxRating);
+public record CreateGameDto(int MaxRating);

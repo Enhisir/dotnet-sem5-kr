@@ -3,13 +3,14 @@ using TicTacToe.Common.Helpers.Abstractions;
 using TicTacToe.Requests;
 using TicTacToe.Services.Abstractions;
 using TicTatToe.Data.Models;
-using TicTatToe.Data.Repositories;
 using TicTatToe.Data.Repositories.Abstractions;
+using TicTatToe.Data.Storage;
 
 namespace TicTacToe.Handlers;
 
 public class SignUpHandler(
     IRepository<User> userRepository,
+    MongoStorage<Rating> ratingStorage,
     IPasswordHasherService passwordHasherService,
     IAuthService authService
     ) : IHandler<SignUpRequest, IResult>
@@ -29,6 +30,8 @@ public class SignUpHandler(
             UserName = request.UserName,
             PasswordHashed = passwordHasherService.Hash(request.Password)
         };
+        await userRepository.AddAsync(newUser);
+        await ratingStorage.CreateAsync(new Rating { UserName = newUser.UserName, Value = 0 });
         var response = authService.CreateResponse(newUser);
         return Results.Ok(response);
     }

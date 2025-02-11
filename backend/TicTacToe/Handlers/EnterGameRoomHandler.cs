@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using TicTacToe.Common.CQRS;
 using TicTacToe.Requests;
 using TicTacToe.Responses;
-using TicTatToe.Data.Enum;
 using TicTatToe.Data.Models;
 using TicTatToe.Data.Repositories.Abstractions;
 using TicTatToe.Data.Storage;

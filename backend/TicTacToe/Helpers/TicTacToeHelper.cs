@@ -55,4 +55,32 @@ public class TicTacToeHelper
 
         return Sign.Empty;
     }
+    
+    public static bool IsGameOver(int[][] board)
+    {
+        for (var i = 0; i < 3; i++)
+            if (!IsLineBlocked(board[i][0], board[i][1], board[i][2])
+                || !IsLineBlocked(board[0][i], board[1][i], board[2][i]))
+                return false;
+        
+        return IsLineBlocked(board[0][0], board[1][1], board[2][2])
+               && IsLineBlocked(board[0][2], board[1][1], board[2][0]);
+        // Если все линии заблокированы, игра окончена
+    }
+
+    // Проверяет, заблокирована ли линия (есть ли два разных знака)
+    private static bool IsLineBlocked(int a, int b, int c)
+    {
+        const int empty = (int)Sign.Empty;
+        const int x = (int)Sign.X;
+        const int o = (int)Sign.O;
+        if (a == (int)Sign.Empty && b == empty && c == empty)
+            return false;
+
+        // Если есть два разных знака, линия заблокирована
+        if ((a == x && b == o) || (a == x && c == o) || (b == x && c == o))
+            return true;
+        
+        return (a == o && b == x) || (a == o && c == x) || (b == o && c == x);
+    }
 }

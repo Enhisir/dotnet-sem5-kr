@@ -8,9 +8,9 @@ public class GameRoom
     
     public State State { get; set; }
     
-    public uint BattleState { get; set; }
+    public int BattleState { get; set; }
     
-    public uint MaxRating { get; set; }
+    public int MaxRating { get; set; }
 
     public string? CurrentTurn { get; set; }
     
